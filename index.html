@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ziki – Agent Huddle concept</title>
+<style>
+:root{--bg:#070d24;--panel:#0f1b38;--card:#13234a;--line:#22345f;--blue:#3b6cf0;--ink:#e8edff;--mute:#8c9bc4;--gold:#f5c04a;--ok:#4fd18b;--face:#0b1430;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#f3f5fb;--panel:#fff;--card:#f6f8fe;--line:#e1e6f3;--ink:#0d1330;--mute:#5b6690;--face:#0b1430}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Helvetica Neue",Arial,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+main{max-width:1040px;margin:0 auto;padding:18px 20px 80px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.logo{font-weight:800;font-size:22px;display:flex;gap:8px;align-items:center}
+.logo i{width:28px;height:28px;border-radius:8px;background:var(--blue);display:grid;place-items:center;font-style:normal;color:#fff}
+.sp{flex:1}.chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:6px 14px;font-size:14px}
+.gold{color:var(--gold);font-weight:700;background:rgba(245,192,74,.12);border-color:transparent}
+h2{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.cnt{background:var(--blue);color:#fff;font-size:13px;border-radius:99px;padding:1px 10px}
+.sub{color:var(--mute);margin:-6px 0 14px;font-size:14px}
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:34px}
+.ag{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px;text-align:center;position:relative}
+.ag h3{margin:4px 0 2px;font-size:17px}.role{font-size:12px;font-weight:700;color:var(--blue);background:rgba(59,108,240,.15);border-radius:99px;padding:2px 10px}
+.say{min-height:40px;margin:10px 0 8px;font-size:13px;color:var(--mute);background:var(--card);border-radius:12px;padding:8px 10px;position:relative}
+.say:before{content:"";position:absolute;left:50%;top:-6px;width:12px;height:12px;background:var(--card);transform:translateX(-50%) rotate(45deg)}
+.lab{font-size:11px;letter-spacing:.08em;color:var(--mute);margin:8px 0 4px}
+.dial{display:flex;background:var(--card);border-radius:99px;padding:3px}
+.dial button{flex:1;border:0;background:none;border-radius:99px;font-size:12px;padding:6px 2px;color:var(--mute);transition:background .3s,color .3s}
+.dial button[aria-pressed=true]{background:var(--blue);color:#fff}
+/* bots */
+.bot{width:96px;height:108px;margin:0 auto;position:relative;--c:#3b6cf0}
+.bot svg{width:100%;height:100%;overflow:visible}
+.fc{fill:var(--c)}.pl{fill:var(--face)}.cy{fill:#7ef0ff}.cs{stroke:#7ef0ff;fill:none;stroke-width:3;stroke-linecap:round}
+.eo,.ec,.eh,.gear,.zz,.bang{display:none}
+.m-work .eo,.m-wait .eo{display:block}.m-idle .ec{display:block}.m-happy .eh{display:block}
+.m-work .gear{display:block}.m-idle .zz{display:block}.m-wait .bang{display:block}
+.body{transform-box:fill-box;transform-origin:50% 100%}
+.m-idle .body{animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{50%{transform:scaleY(1.03)}}
+.m-work .eo{animation:look 2.4s ease-in-out infinite}
+@keyframes look{0%,100%{transform:translateX(-2px)}50%{transform:translateX(2px)}}
+.eo{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.m-work .eo{animation:look 2.4s ease-in-out infinite,blink 4.5s infinite}
+.bulb{fill:#7ef0ff;animation:pulse 1.6s ease-in-out infinite}
+.m-wait .bulb{fill:#ffb020;animation:pulse .5s ease-in-out infinite}
+.m-idle .bulb{fill:#4a5a8a;animation:none}
+@keyframes pulse{50%{opacity:.3}}
+.gear{transform-box:fill-box;transform-origin:center;animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.arm{transform-box:fill-box;transform-origin:50% 100%}
+.m-wait .arm{animation:wave .6s ease-in-out infinite alternate}
+@keyframes wave{from{transform:rotate(-155deg)}to{transform:rotate(-120deg)}}
+.m-happy{animation:hop .7s cubic-bezier(.3,.7,.4,1) 2}
+@keyframes hop{40%{transform:translateY(-16px) rotate(-5deg)}70%{transform:translateY(0) scale(1.05,.94)}}
+.zz{font:700 14px sans-serif;fill:var(--mute);animation:zz 2.4s ease-in infinite}
+@keyframes zz{from{transform:translate(0,6px);opacity:0}30%{opacity:1}to{transform:translate(8px,-10px);opacity:0}}
+.bang{font:800 20px sans-serif;fill:#ffb020;animation:pulse .5s infinite}
+/* handoff cards */
+.hc{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:18px;padding:16px 18px;margin-bottom:12px;display:grid;grid-template-columns:auto 1fr;gap:14px;transition:opacity .3s,transform .3s}
+.hc.out{opacity:0;transform:translateX(30px)}
+.hc .mini{width:44px}
+.hc h4{margin:0 0 2px;font-size:16px}.ref{color:var(--mute);font:13px ui-monospace,Menlo,monospace}
+.conf{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);margin:8px 0}
+.conf div{width:110px;height:6px;border-radius:9px;background:var(--card);overflow:hidden}.conf b{display:block;height:100%;background:var(--ok);border-radius:9px}
+.why{display:none;font-size:14px;color:var(--mute);background:var(--card);border-radius:12px;padding:8px 12px;margin-bottom:8px}.why.on{display:block}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.acts button{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 16px}
+.acts .yes{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.acts .lnk{border:0;background:none;color:var(--blue);padding:7px 4px}
+.nudge{background:linear-gradient(135deg,rgba(59,108,240,.25),rgba(126,240,255,.12));border:1px solid var(--blue);border-radius:18px;padding:14px 18px;margin-bottom:12px;animation:in .5s cubic-bezier(.3,.9,.3,1.2)}
+@keyframes in{from{transform:scale(.9) translateY(-10px);opacity:0}}
+.empty{text-align:center;padding:30px 20px;background:var(--panel);border:1px dashed var(--line);border-radius:22px}
+.empty .bot{width:110px}
+.tools{margin-top:18px;display:flex;gap:8px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="logo"><i>Z</i>ziki</div><span class="chip">Zedu</span>
+  <div class="sp"></div>
+  <span class="chip gold">524 pts</span>
+  <button class="chip" id="theme">Dark / light</button>
+</header>
+
+<h2>Your agents</h2>
+<p class="sub">Each agent shows how it feels right now, and how much freedom you have given it.</p>
+<div class="agents" id="agents"></div>
+
+<h2>Need your input <span class="cnt" id="count">0</span></h2>
+<div id="nudge"></div>
+<div id="cards"></div>
+<div class="tools"><button class="chip" id="replay">Replay demo</button></div>
+</main>
+
+<script>
+const root=document.documentElement;
+document.getElementById('theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='light'?'dark':'light'};
+const LV=['Ask first','Ask if unsure','Go ahead'];
+const base=()=>[
+ {id:'lambo',name:'Lambo',role:'Reviewer',c:'#8a5cf0',rest:'work',lv:0,st:0,say:['Reading #107 for layout clues…','Measuring windows…']},
+ {id:'tami',name:'Tami',role:'Reviewer',c:'#3b9cf0',rest:'work',lv:0,st:0,say:['Sniffing out broken links…','Bleep… bloop…']},
+ {id:'dami',name:'Dami',role:'Reviewer',c:'#f07a3b',rest:'work',lv:0,st:0,say:['Comparing screenshots…','Counting votes…']},
+ {id:'chat',name:'ChatGPT Assistant',role:'Triager',c:'#4f8cf0',rest:'idle',lv:0,st:0,say:['Standing by.']}
+];
+const cardsData=()=>[
+ {id:1,a:'tami',t:'Footer Facebook icon links to a broken URL',r:'#148',b:'I found the live page. Want me to point the icon at it and open the fix?',conf:92,why:'The old URL returns 404. The new one matches the brand name and the other footer icons.',acts:[['Do it','yes'],['Not that','no']]},
+ {id:2,a:'lambo',t:'Desktop sign up screen doesn’t fit the default window',r:'#107',b:'I can ship two layouts. Which one do you prefer?',conf:64,why:'Both fit at 1280px. A scrolls less, B keeps the form centred. I can’t tell which fits your brand.',acts:[['Layout A','yes'],['Layout B','yes']]},
+ {id:3,a:'tami',t:'Voice message shows as “Video” in the chats list',r:'#183',b:'The label comes from the wrong message type. I can relabel it as “Voice message”.',conf:88,why:'One string in the list view maps audio to the video label.',acts:[['Do it','yes'],['Not that','no']]},
+ {id:4,a:'dami',t:'Hero avatar row doesn’t look like real, varied learners',r:'#7',b:'I drafted three replacement photo sets. Which should I start with?',conf:58,why:'Photo choice is a taste call, so I’d rather ask than guess.',acts:[['Set 1','yes'],['Set 2','yes'],['Set 3','yes']]},
+ {id:5,a:'tami',t:'Login screen copy says “Already have an account? Sign up”',r:'#181',b:'The sentence is reversed. I can swap it to “Already have an account? Sign in”.',conf:95,why:'The link goes to the sign-in page, so the wording is wrong.',acts:[['Do it','yes'],['Not that','no']]}
+];
+let A,C,over={};
+const bot=(c,m)=>`<div class="bot m-${m}" style="--c:${c}"><svg viewBox="0 0 80 90"><g class="body">
+<line x1="40" y1="8" x2="40" y2="18" stroke="${c}" stroke-width="3"/><circle class="bulb" cx="40" cy="7" r="4.5"/>
+<rect class="fc" x="8" y="30" width="6" height="12" rx="3"/><rect class="fc" x="66" y="30" width="6" height="12" rx="3"/>
+<rect class="fc" x="14" y="18" width="52" height="38" rx="15"/><rect class="pl" x="20" y="24" width="40" height="26" rx="11"/>
+<g class="eo"><ellipse class="cy" cx="32" cy="36" rx="4.5" ry="5.5"/><ellipse class="cy" cx="48" cy="36" rx="4.5" ry="5.5"/></g>
+<g class="ec"><path class="cs" d="M27 37q5 4 10 0M43 37q5 4 10 0"/></g><g class="eh"><path class="cs" d="M27 39q5-8 10 0M43 39q5-8 10 0"/></g>
+<path class="cs" d="M35 44q5 3 10 0" stroke-width="2"/>
+<rect class="fc" x="22" y="58" width="36" height="26" rx="10"/><circle class="cy" cx="40" cy="71" r="4" opacity=".8"/>
+<rect class="fc" x="12" y="60" width="8" height="18" rx="4"/><rect class="fc arm" x="60" y="60" width="8" height="18" rx="4"/></g>
+<circle class="gear" cx="70" cy="12" r="6" fill="none" stroke="#7ef0ff" stroke-width="3" stroke-dasharray="4 3"/>
+<text class="zz" x="62" y="18">z</text><text class="bang" x="68" y="16">!</text></svg></div>`;
+const mood=a=>over[a.id]||(C.some(x=>x.a===a.id)?'wait':a.rest);
+const sayFor=a=>{const m=mood(a);return m==='wait'?'Psst! I need your call.':m==='happy'?'Yay! On it.':m==='idle'?'Standing by. zzz':a.say[Math.floor(Math.random()*a.say.length)]};
+function drawAgents(){
+  document.getElementById('agents').innerHTML=A.map(a=>`<div class="ag" id="ag-${a.id}">${bot(a.c,mood(a))}<h3>${a.name}</h3><span class="role">${a.role}</span>
+  <div class="say" id="say-${a.id}">${over['s'+a.id]||sayFor(a)}</div><div class="lab">AUTONOMY</div>
+  <div class="dial">${LV.map((l,i)=>`<button aria-pressed="${a.lv===i}" data-a="${a.id}" data-i="${i}">${l}</button>`).join('')}</div></div>`).join('');
+  document.querySelectorAll('.dial button').forEach(b=>b.onclick=()=>{A.find(x=>x.id===b.dataset.a).lv=+b.dataset.i;drawAgents()});
+}
+function drawCards(){
+  document.getElementById('count').textContent=C.length;
+  const el=document.getElementById('cards');
+  if(!C.length){el.innerHTML=`<div class="empty">${bot('#4f8cf0','idle')}<h3>All caught up</h3><p class="sub">Your agents are napping. They’ll wave when they need you.</p></div>`;return}
+  el.innerHTML=C.map(c=>{const a=A.find(x=>x.id===c.a);return `<div class="hc" id="c${c.id}"><div class="mini">${bot(a.c,'wait').replace('class="bot','class="bot mini')}</div><div>
+  <h4>${c.t}</h4><div class="ref">${c.r} · ${a.name}</div><p style="margin:8px 0 0">${c.b}</p>
+  <div class="conf">Confidence <div><b style="width:${c.conf}%"></b></div>${c.conf}%</div><div class="why" id="w${c.id}">${c.why}</div>
+  <div class="acts">${c.acts.map(x=>`<button class="${x[1]==='yes'?'yes':''}" data-id="${c.id}" data-k="${x[1]}">${x[0]}</button>`).join('')}<button class="lnk" data-w="${c.id}">Why?</button></div></div></div>`}).join('');
+  el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>answer(+b.dataset.id,b.dataset.k));
+  el.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>document.getElementById('w'+b.dataset.w).classList.toggle('on'));
+}
+function answer(id,k){
+  const c=C.find(x=>x.id===id),a=A.find(x=>x.id===c.a);
+  document.getElementById('c'+id).classList.add('out');
+  setTimeout(()=>{
+    C=C.filter(x=>x.id!==id);
+    if(k==='yes'){a.st++;over[a.id]='happy';setTimeout(()=>{delete over[a.id];draw()},1500)}
+    else{a.st=0;over['s'+a.id]='Noted. I’ll rethink it.';setTimeout(()=>{delete over['s'+a.id];drawAgents()},2200)}
+    draw();
+    if(k==='yes'&&a.st>=3&&a.lv<2)nudge(a);
+  },300);
+}
+function nudge(a){
+  document.getElementById('nudge').innerHTML=`<div class="nudge"><b>${a.name}:</b> You’ve approved my last ${a.st} suggestions. Want me to go ahead on small fixes like these and only ask when I’m unsure?
+  <div class="acts" style="margin-top:10px"><button class="yes" id="ny">Yes, level me up</button><button id="nn">Not yet</button></div></div>`;
+  document.getElementById('ny').onclick=()=>{a.lv=Math.min(2,a.lv+1);a.st=0;document.getElementById('nudge').innerHTML='';over[a.id]='happy';setTimeout(()=>{delete over[a.id];draw()},1500);draw()};
+  document.getElementById('nn').onclick=()=>{document.getElementById('nudge').innerHTML=''};
+}
+function draw(){drawAgents();drawCards()}
+function init(){A=base();C=cardsData();over={};document.getElementById('nudge').innerHTML='';draw()}
+document.getElementById('replay').onclick=init;
+setInterval(()=>A.forEach(a=>{const m=mood(a);if(m==='work'&&!over['s'+a.id]){const e=document.getElementById('say-'+a.id);if(e)e.textContent=sayFor(a)}}),3000);
+init();
+</script>
+</body>
+</html>
